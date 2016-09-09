@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController ()<UITextFieldDelegate>
 
 @end
 
@@ -16,6 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -24,4 +25,19 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - UITextFieldDelegate
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    if( textField.tag != ViewControllerButtonEmail)
+    {
+        UITextField *currentTextField = [self.arrayTextFields objectAtIndex:textField.tag + 1];
+        [currentTextField becomeFirstResponder];
+    }
+    else
+    {
+        UITextField *currentTextField = [self.arrayTextFields objectAtIndex:textField.tag];
+        [currentTextField resignFirstResponder];
+    }
+    return YES;
+}
 @end
