@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
 @interface ViewController ()<UITextFieldDelegate>
 
 @end
@@ -16,13 +16,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - UITextFieldDelegate
@@ -40,4 +33,17 @@
     }
     return YES;
 }
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField{
+    UILabel *currentLabel = [self.arrayLabels objectAtIndex:textField.tag];
+    currentLabel.text = @"";
+    return YES;
+}
+
+#pragma mark - ActionUILabel
+-(IBAction)actionChangeTextLabel:(UITextField*)sender{
+        UILabel *currentLabel = [self.arrayLabels objectAtIndex:sender.tag];
+        currentLabel.text = sender.text;
+}
+
 @end

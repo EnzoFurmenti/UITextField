@@ -22,6 +22,8 @@ typedef enum{
 
 
 @property(strong,nonatomic)IBOutletCollection(UITextField) NSArray *arrayTextFields;
+@property(strong,nonatomic)IBOutletCollection(UILabel) NSArray *arrayLabels;
+-(IBAction)actionChangeTextLabel:(UITextField*)sender;
 
 @end
 
