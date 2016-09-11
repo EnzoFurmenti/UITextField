@@ -103,12 +103,13 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите телефон" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="nzU-eA-hfP">
+                            <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите телефон" minimumFontSize="12" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="nzU-eA-hfP">
                                 <rect key="frame" x="239" y="312" width="203" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="nzU-eA-hfP" secondAttribute="height" multiplier="203:30" id="4M9-kd-F0h"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" returnKeyType="next"/>
                                 <connections>
                                     <action selector="actionChangeTextLabel:" destination="BYZ-38-t0r" eventType="editingChanged" id="X2M-v3-PLy"/>
@@ -130,7 +131,7 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="go"/>
                                 <connections>
                                     <action selector="actionChangeTextLabel:" destination="BYZ-38-t0r" eventType="editingChanged" id="LCw-sH-0EA"/>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="vGK-qq-qKN"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="EvW-DB-ER8"/>
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="e-mail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R52-dd-6hR">

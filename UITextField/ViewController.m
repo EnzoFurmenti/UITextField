@@ -16,12 +16,24 @@ UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(notificationChangeTextInTextField:)
+//                                                 name:UITextFieldTextDidChangeNotification
+//                                               object:nil];
+    
+}
+
+-(void)dealloc{
+   // [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 #pragma mark - UITextFieldDelegate
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
-    if( textField.tag != ViewControllerButtonEmail)
+    if(textField.tag != ViewControllerButtonEmail)
     {
         UITextField *currentTextField = [self.arrayTextFields objectAtIndex:textField.tag + 1];
         [currentTextField becomeFirstResponder];
@@ -40,10 +52,101 @@ UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
     return YES;
 }
 
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    if((textField.tag == ViewControllerButtonTel))
+    {
+        NSString *newString = [self getValidNumberString:textField.text withRange:range withString:string];
+        if(newString)
+        {
+            NSString *resultString =  [self createTeleStringFromString:newString];
+            if(resultString)
+            {
+                textField.text = resultString;
+            }
+        }
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
 #pragma mark - ActionUILabel
 -(IBAction)actionChangeTextLabel:(UITextField*)sender{
         UILabel *currentLabel = [self.arrayLabels objectAtIndex:sender.tag];
         currentLabel.text = sender.text;
+}
+
+
+#pragma mark - UITextFieldNotification
+
+-(void)notificationChangeTextInTextField:(NSNotification*)notification{
+    for (UITextField *currentTextField in self.arrayTextFields)
+    {
+        if([currentTextField isFirstResponder])
+        {
+            NSLog(@"TextField tag %d",currentTextField.tag);
+        }
+    }
+    
+}
+
+
+#pragma mark - metods for TeleString
+-(NSString*)getValidNumberString:(NSString*)currentString withRange:(NSRange)range withString:(NSString*)string{
+    NSCharacterSet *validSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    NSArray *component = [string componentsSeparatedByCharactersInSet:validSet];
+    NSString *newString;
+    if(!([component count] > 1))
+    {
+        newString = [currentString stringByReplacingCharactersInRange:range withString:string];
+        NSArray *validComponent = [newString componentsSeparatedByCharactersInSet:validSet];
+        newString = [validComponent componentsJoinedByString:@""];
+    }
+    return newString;
+}
+
+-(NSString*)createTeleStringFromString:(NSString*)string{
+    static const int localNumberMaxLength = 7;
+    static const int areaCodeMaxLength = 3;
+    static const int countrycCodeMaxLength = 3;
+    NSInteger queueSymbolsBeforeDash = 3;
+    NSMutableString *resultString = [NSMutableString string];
+    if([string length] >localNumberMaxLength + areaCodeMaxLength + countrycCodeMaxLength)
+    {
+        resultString = nil;
+    }
+    else
+    {
+        NSInteger localNumberLength = MIN([string length],localNumberMaxLength);
+        if(localNumberLength > 0)
+        {
+            NSString *number = [string substringFromIndex:(int)[string length] - localNumberLength];
+            [resultString appendString:number];
+            if([resultString length] > queueSymbolsBeforeDash)
+            {
+                [resultString insertString:@"-" atIndex:queueSymbolsBeforeDash];
+            }
+        }
+        if([string length] > localNumberMaxLength)
+        {
+            NSInteger areaCodeLength = MIN((int)[string length] - localNumberMaxLength,areaCodeMaxLength);
+            NSRange areaRange = NSMakeRange((int)[string length] - localNumberMaxLength - areaCodeLength, areaCodeLength);
+            NSString *area = [string substringWithRange:areaRange];
+            area = [NSString stringWithFormat:@"(%@)",area];
+            [resultString insertString:area atIndex:0];
+        }
+        
+        if([string length] > localNumberMaxLength + areaCodeMaxLength)
+        {
+            NSInteger countryCodeLength = MIN((int)[string length] - localNumberMaxLength - areaCodeMaxLength,countrycCodeMaxLength);
+            NSRange countryCodeRange = NSMakeRange(0, countryCodeLength);
+            NSString *countryCode = [string substringWithRange:countryCodeRange];
+            countryCode = [NSString stringWithFormat:@"+%@",countryCode];
+            [resultString insertString:countryCode atIndex:0];
+        }
+    }
+    return resultString;
 }
 
 @end
