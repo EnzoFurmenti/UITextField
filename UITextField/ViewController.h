@@ -9,14 +9,14 @@
 #import <UIKit/UIKit.h>
 
 typedef enum{
-    ViewControllerButtonFirstName = 0,
-    ViewControllerButtonLastName  = 1,
-    ViewControllerButtonLogin     = 2,
-    ViewControllerButtonPassword  = 3,
-    ViewControllerButtonAge       = 4,
-    ViewControllerButtonTel       = 5,
-    ViewControllerButtonEmail     = 6
-}ViewControllerButtonType;
+    ViewControllerTextFieldFirstName = 0,
+    ViewControllerTextFieldLastName  = 1,
+    ViewControllerTextFieldLogin     = 2,
+    ViewControllerTextFieldPassword  = 3,
+    ViewControllerTextFieldAge       = 4,
+    ViewControllerTextFieldTel       = 5,
+    ViewControllerTextFieldEmail     = 6
+}ViewControllerTextFieldType;
 
 @interface ViewController : UIViewController
 

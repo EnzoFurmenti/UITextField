@@ -16,24 +16,24 @@ UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(notificationChangeTextInTextField:)
-//                                                 name:UITextFieldTextDidChangeNotification
-//                                               object:nil];
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(self.view.center.x, self.view.center.x, 200, 30)];
+    [self.view addSubview:textField];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(notificationChangeTextInTextField:)
+                                                 name:UITextFieldTextDidChangeNotification
+                                               object:nil];
     
 }
 
 -(void)dealloc{
-   // [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
 }
 
 #pragma mark - UITextFieldDelegate
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
-    if(textField.tag != ViewControllerButtonEmail)
+    if(textField.tag != ViewControllerTextFieldEmail)
     {
         UITextField *currentTextField = [self.arrayTextFields objectAtIndex:textField.tag + 1];
         [currentTextField becomeFirstResponder];
@@ -53,7 +53,8 @@ UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    if((textField.tag == ViewControllerButtonTel))
+    
+    if((textField.tag == ViewControllerTextFieldTel))
     {
         NSString *newString = [self getValidNumberString:textField.text withRange:range withString:string];
         if(newString)
@@ -68,6 +69,15 @@ UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
         return NO;
     }
     
+    if(textField.tag == ViewControllerTextFieldEmail)
+    {
+        NSString *resultString = [self separateEmailString:textField.text withRange:range withString:string];
+        if(resultString)
+        {
+            textField.text = resultString;
+        }
+        return NO;
+    }
     return YES;
 }
 
@@ -148,5 +158,38 @@ UIKIT_EXTERN NSString *const UITextFieldTextDidChangeNotification;
     }
     return resultString;
 }
+
+#pragma mark - metods for TextFieldEmail
+-(NSString* _Nullable)separateEmailString:(NSString*)emailStr withRange:(NSRange)range withString:(NSString*)string{
+    
+    NSString *validCharactersString = @"@!#$%&'*+-/=?^_`{|}~.";
+    NSInteger maxLengthEmail = 30;
+    NSCharacterSet *numberCharSet = [NSCharacterSet decimalDigitCharacterSet];
+    NSMutableCharacterSet *validMutableCharSet = [NSMutableCharacterSet letterCharacterSet];
+    [validMutableCharSet formUnionWithCharacterSet:numberCharSet];
+    [validMutableCharSet addCharactersInString:validCharactersString];
+    [validMutableCharSet invert];
+
+    NSArray *component = [string componentsSeparatedByCharactersInSet:validMutableCharSet];
+    NSString *newString = nil;
+    if(!([component count] > 1))
+    {
+        newString = [emailStr stringByReplacingCharactersInRange:range withString:string];
+        NSArray *componentDog = [newString componentsSeparatedByString:@"@"];
+        if(([componentDog count] <= 2)&
+           ![newString containsString:@".."]&
+           ([newString length] < maxLengthEmail))
+        {
+            NSArray *validComponent = [newString componentsSeparatedByCharactersInSet:validMutableCharSet];
+            newString = [validComponent componentsJoinedByString:@""];
+        }
+        else
+        {
+            newString = nil;
+        }
+    }
+    return newString;
+}
+
 
 @end
